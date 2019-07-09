@@ -99,7 +99,7 @@
       </el-aside>
       
       <el-main class="main">
-        Main
+        <router-view></router-view>
       </el-main>
 
     </el-container>

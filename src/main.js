@@ -8,9 +8,18 @@ import App from './App'
 import router from './router'
 // 导入初始化css样式
 import '@/assets/css/index.css'
+import moment from 'moment';
+
+
 
 // 注册插件
 Vue.use(ElementUI)
+
+// 全局过滤器
+Vue.filter('fmtDate',(value,fmtString) => {
+  return moment(value).format(fmtString)
+})
+
 
 // 不输出一些默认的信息
 Vue.config.productionTip = false
