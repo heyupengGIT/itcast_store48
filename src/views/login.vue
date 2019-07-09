@@ -6,7 +6,8 @@
         <el-input v-model="formdata.username"></el-input>
       </el-form-item>
       <el-form-item label="密码">
-        <el-input type='password' v-model="formdata.password"></el-input>
+        <!-- 组件，  veu有自己的事件机制 -->
+        <el-input type='password' v-model="formdata.password" @keyup.enter.native='handleLogin'></el-input>
       </el-form-item>
       <el-form-item>
         <el-button class="login-btn" type="primary" @click="handleLogin">登录</el-button>
@@ -29,25 +30,39 @@ export default {
     };
   },
   methods: {
-    handleLogin () {
-      axios
-        .post('http://localhost:8888/api/private/v1/login',this.formdata)
-        .then((response) => {
-          console.log(response)
-          var status = response.data.meta.status;
-          var msg = response.data.meta.msg;
-          if ( status === 200 ) {
-            this.$message.success(msg)
-            // 记录token到sessionStorage中
-            var token = response.data.data.token;
-            sessionStorage.setItem('token',token)
-          }else{
-            this.$message.error(msg)
-          }
-        })
-        .catch((err) => {
-          console.log(err)
-        })
+    async handleLogin () {
+      // axios
+      //   .post('http://localhost:8888/api/private/v1/login',this.formdata)
+      //   .then((response) => {
+      //     console.log(response)
+      //     var status = response.data.meta.status;
+      //     var msg = response.data.meta.msg;
+      //     if ( status === 200 ) {
+      //       this.$message.success(msg)
+      //       // 记录token到sessionStorage中
+      //       var token = response.data.data.token;
+      //       sessionStorage.setItem('token',token)
+      //       跳转到后台首页
+              // this.$router.push('/')
+      //     }else{
+      //       this.$message.error(msg)
+      //     }
+      //   })
+      //   .catch((err) => {
+      //     console.log(err)
+      //   })
+
+      var response = await axios.post('http://localhost:8888/api/private/v1/login',this.formdata);
+      var status = response.data.meta.status;
+      var msg = response.data.meta.msg;
+      if (status === 200) {
+        this.$message.success(msg)
+        var token = response.data.data.token;
+        sessionStorage.setItem('token',token)
+        this.$router.push('/')
+      }else {
+        this.$message.error(msg)
+      }
     }
   }
 
